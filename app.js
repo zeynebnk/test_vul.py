@@ -1,4 +1,4 @@
-// app.js - Express web application with SQL injection vulnerability
+// app.js - Express web application
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
@@ -50,11 +50,9 @@ app.get('/', (req, res) => {
   res.render('index');
 });
 
-// VULNERABLE ROUTE - SQL Injection in the search parameter
 app.get('/search', (req, res) => {
   const searchTerm = req.query.term;
   
-  // VULNERABLE CODE: Direct concatenation of user input into SQL query
   const query = `SELECT * FROM products WHERE name LIKE '%${searchTerm}%' OR description LIKE '%${searchTerm}%'`;
   
   db.all(query, [], (err, rows) => {
@@ -67,12 +65,10 @@ app.get('/search', (req, res) => {
   });
 });
 
-// VULNERABLE ROUTE - SQL Injection in login form
 app.post('/login', (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
   
-  // VULNERABLE CODE: Direct concatenation of user input into SQL query
   const query = `SELECT * FROM users WHERE username = '${username}' AND password = '${password}'`;
   
   db.get(query, [], (err, user) => {
@@ -89,7 +85,6 @@ app.post('/login', (req, res) => {
   });
 });
 
-// Protected route
 app.get('/admin', (req, res) => {
   // This would normally check session/authentication
   // But for this example, we'll just render the admin page
